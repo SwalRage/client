@@ -6,7 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    room_list: []
+    room_list: [],
+    room : {}
   },
   mutations: {
     SET_ROOM_LIST(state, payload) {
@@ -15,6 +16,9 @@ export default new Vuex.Store({
     },
     EMPTY_ROOM_LIST(state,payload){
       state.room_list = []
+    },
+    SET_MY_ROOM(state, payload){
+      state.room = payload
     }
   },
   actions: {
@@ -120,6 +124,14 @@ export default new Vuex.Store({
           })
           .catch((err)=>{
             reject(err)
+          })
+      })
+    },
+    getRoomDetail(context,payload){
+      return new Promise((resolve,reject)=>{
+        db.collection('rooms').doc(`${payload.room_name}`)
+          .onSnapshot(room=>{
+            context.commit('SET_MY_ROOM',room.data())
           })
       })
     }
