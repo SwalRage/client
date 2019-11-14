@@ -1,13 +1,14 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import db from "../config/firebase";
+import Vue from 'vue'
+import Vuex from 'vuex'
+import db from '../config/firebase'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     room_list: [],
-    room : {}
+    room : {},
+    finish: false
   },
   mutations: {
     SET_ROOM_LIST(state, payload) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     SET_MY_ROOM(state, payload){
       state.room = payload
+    },
+    SET_FINISH(state, payload){
+      state.finish = payload
     }
   },
   actions: {
@@ -131,9 +135,20 @@ export default new Vuex.Store({
       return new Promise((resolve,reject)=>{
         db.collection('rooms').doc(`${payload.room_name}`)
           .onSnapshot(room=>{
+            console.log(room.data())
+            console.log(payload.room_name)
             context.commit('SET_MY_ROOM',room.data())
           })
       })
+    },
+    updatedFinish(context, payload){
+      console.log(payload, 'updateddd action')
+      db.collection('rooms')
+        .doc(`${payload.room_name}`)
+        .update({
+          finish: payload
+        })
+        context.commit('SET_FINISH',payload)
     }
   }
 });
