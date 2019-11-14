@@ -38,6 +38,7 @@ export default {
       this.$store.dispatch('joinRoom',payload)
         .then(()=>{
           Swal.close()
+          localStorage.setItem('username',this.name)
         this.$router.push({path : `/game/${item.room_name}`})
         })
         .catch((err)=>{
