@@ -28,5 +28,10 @@ export default new Router({
       component: Game,
       props : true
     },
+    {
+      path: '/game',
+      name: 'game',
+      component: () => import('./views/Game.vue')
+    }
   ]
 })
