@@ -47,12 +47,17 @@
         <!-- {{ room }} -->
         Score: {{score}}
         <div class="gameboard">
-          <div v-for="(func, index) in arrPos" :key="index">
-            <template>
-              <div @click="func(index)" :style="{opacity: isDisabled[index]}">
-                <img class="cardback" alt="Cardback" src="../assets/cardback.jpeg" />
-              </div>
-            </template>
+          <div class="cards">
+            <div v-for="(func, index) in arrPos" :key="index">
+              <vue-flip :active-click="activeOnClick[index]" class="simple-test" width="120px" height="185px">
+                <template slot="front">
+                  <div @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></div>
+                </template>
+                <template slot="back">
+                  <div class= "backcard" style="height:180px; width:120px; color:black;border-style: solid" @click="handleClick(index)">{{func == plus2 ? '+2 Point' : func == plus1 ? '+1 Point': func == plus0 ? '+0 Point' : '<3 Swal'}}</div>
+                </template>
+              </vue-flip>
+            </div>
           </div>
           <b-row style="border:1px solid black">
             <b-col>
@@ -87,13 +92,6 @@
         </div>
       </b-col>
     </b-container>
-    <!-- <button @click="randomize()">Start</button>
-    Score: {{score}}
-    <div class="gameboard">
-      <div v-for="(func, index) in arrPos" :key="index">
-        <button @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></button>
-      </div>
-    </div>-->
   </div>
 </template>
 
@@ -135,7 +133,7 @@ export default {
       ],
       arrPos: [],
       isDisabled: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      activeOnClick: true
+      activeOnClick: [true, true, true, true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,]
     };
   },
   components: {
@@ -157,69 +155,76 @@ export default {
       let payload = this.$route.params.room_name
       this.$store.dispatch("updateStart", payload);
     },
-    randomize() {
-      while (this.arrPos.length < 20) {
-        let index = Math.floor(Math.random() * this.arrNew.length);
-        this.arrPos.push(this.arrNew[index]);
-        this.arrNew.splice(index, 1);
+    randomize(){
+      while(this.arrPos.length < 30){
+        let index = Math.floor(Math.random() * this.arrNew.length)
+        this.arrPos.push(this.arrNew[index])
+        this.arrNew.splice(index, 1)
       }
     },
-    handleClick() {
-      this.activeOnClick = false;
+    handleClick(index){
+      this.arrPos[index] = this.alreadyClick
+      this.activeOnClick[index] = false
     },
-    plus2(index) {
-      this.score += 2;
-      this.arrPos[index] = this.alreadyClick;
-      this.isDisabled[index] = 0.2;
-      this.addScore(2);
+    plus2(index){
+      this.score += 2
+      // this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
     },
-    plus1(index) {
-      this.score += 1;
-      this.isDisabled[index] = 0.2;
-      this.arrPos[index] = this.alreadyClick;
-      this.addScore(1);
+    plus1(index){
+      this.score += 1
+      this.isDisabled[index] = 0.2
+      // this.arrPos[index] = this.alreadyClick
     },
-    plus0(index) {
-      this.score += 1;
-      this.score--;
-      this.arrPos[index] = this.alreadyClick;
-      this.isDisabled[index] = 0.2;
+    plus0(index){
+      this.score += 1
+      this.score --
+      // this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
     },
-    swalError(index) {
-      this.score += 1;
-      this.score--;
-      this.arrPos[index] = this.alreadyClick;
-      this.isDisabled[index] = 0.2;
+    swalError(index){
+      this.score += 1
+      this.score --
+      // this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "You clicked the wrong card"
       });
     },
-    swalSuccess(index) {
-      this.score += 1;
-      this.score--;
-      this.arrPos[index] = this.alreadyClick;
-      this.isDisabled[index] = 0.2;
-      Swal.fire("Good job!", "You clicked the wrong card!", "success");
+    swalSuccess(index){
+      this.score += 1
+      this.score --
+      // this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+      Swal.fire(
+        'Good job!',
+        'You clicked the wrong card!',
+        'success'
+      )
     },
-    swalConfirm(index) {
-      this.score += 1;
-      this.score--;
-      this.arrPos[index] = this.alreadyClick;
-      this.isDisabled[index] = 0.2;
-      Swal.fire("Why You Click Me?", "LOL", "question");
+    swalConfirm(index){
+      this.score += 1
+      this.score --
+      // this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+      Swal.fire(
+        'Why You Click Me?',
+        'LOL',
+        'question'
+      )
     },
-    swalLoading(index) {
-      this.score += 1;
-      this.score--;
-      this.arrPos[index] = this.alreadyClick;
-      this.isDisabled[index] = 0.2;
-      let timerInterval;
+    swalLoading(index){
+      this.score += 1
+      this.score --
+      // this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+      let timerInterval
       Swal.fire({
-        title: "Auto close alert!",
-        html: "I will close in <b></b> milliseconds.",
-        timer: 3500,
+        title: 'Auto close alert!',
+        html: 'I will close in <b></b> milliseconds.',
+        timer: 500,
         timerProgressBar: true,
         onBeforeOpen: () => {
           Swal.showLoading();
@@ -328,36 +333,38 @@ export default {
   background-color: #5b9aa0;
   font-family: "Eczar", serif;
 }
-.cardList {
-  height: 90vh;
-}
+
 .cardback {
   height: 180px;
   width: 120px;
 }
-.gameboard {
+/*.gameboard {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-around;
   flex-wrap: wrap;
+}*/
+.cards {
+  display: flex;
+  align-items:flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 .front {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #673ab7;
+  background-color: #673AB7;
   color: white;
 }
 
 .back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffc107;
-  color: white;
+  background-color: #FFC107;
+  color: white
 }
+
+
 .simple-test {
-  padding: 10px;
+   padding: 10px;
 }
+
 </style>
