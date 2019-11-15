@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     room_list: [],
     room: {},
-    finish: false
+    finish: false,
+    start : false,
   },
   mutations: {
     SET_ROOM_LIST(state, payload) {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     },
     SET_FINISH(state, payload) {
       state.finish = payload;
+    },
+    SET_START(state,payload){
+      state.start = payload
     }
   },
   actions: {
@@ -53,6 +57,7 @@ export default new Vuex.Store({
             score: ""
           };
         }
+        obj.start = false
         obj.finish = false;
         obj.count = 1;
         obj.player1 = {
@@ -150,6 +155,8 @@ export default new Vuex.Store({
             console.log(payload.room_name);
             let datas = room.data()
             let payloadFinish = datas.finish
+            let start = datas.start
+            context.commit('SET_START',start)
             context.commit("SET_FINISH", payloadFinish)
             context.commit("SET_MY_ROOM", room.data());
           });
@@ -163,6 +170,15 @@ export default new Vuex.Store({
           finish: payload
         });
       context.commit("SET_FINISH", payload);
+    },
+    updateStart(context, payload) {
+      console.log(payload, "updateddd start");
+      db.collection("rooms")
+        .doc(`${payload}`)
+        .update({
+          start: true
+        });
+      context.commit("SET_START", true);
     },
     addScore(context, payload) {
       return db.runTransaction(transaction => {
