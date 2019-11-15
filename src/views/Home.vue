@@ -59,7 +59,8 @@ export default {
       this.$store.dispatch('checkRoom',payload)
         .then(()=>{
           localStorage.setItem('admin',this.username)
-          localStorage.setItem('username',this.username)  
+          localStorage.setItem('username',this.username)
+          localStorage.setItem('player','player1')
           Swal.close()
           this.$router.push({path : `/game/${this.room_name}`})
           this.room_name=''

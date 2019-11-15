@@ -54,7 +54,7 @@ export default {
     },
     winner(payload){
       this.$store.dispatch('updatedFinish', payload)
-    }
+    },
   },
   created(){
     this.$store.dispatch('getRoomDetail',this.$route.params)
