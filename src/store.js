@@ -167,10 +167,7 @@ export default new Vuex.Store({
 
         return transaction.get(roomRef).then(roomDoc => {
           roomDoc = roomDoc.data();
-          console.log(payload.player);
-          console.log(roomDoc);
           roomDoc[payload.player].score += payload.score;
-          console.log(roomDoc);
           transaction.set(roomRef, roomDoc);
           if (roomDoc[payload.player].score >= 10) {
             transaction.update(roomRef, { finish: true });
