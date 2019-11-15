@@ -148,6 +148,9 @@ export default new Vuex.Store({
           .onSnapshot(room => {
             console.log(room.data());
             console.log(payload.room_name);
+            let datas = room.data()
+            let payloadFinish = datas.finish
+            context.commit("SET_FINISH", payloadFinish)
             context.commit("SET_MY_ROOM", room.data());
           });
       });

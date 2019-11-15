@@ -169,11 +169,13 @@ export default {
       this.score += 2;
       this.arrPos[index] = this.alreadyClick;
       this.isDisabled[index] = 0.2;
+      this.addScore(2);
     },
     plus1(index) {
       this.score += 1;
       this.isDisabled[index] = 0.2;
       this.arrPos[index] = this.alreadyClick;
+      this.addScore(1);
     },
     plus0(index) {
       this.score += 1;
@@ -256,6 +258,26 @@ export default {
   watch: {
     finish(baru, old) {
       if (baru === true) {
+        swal({
+          title: "FINISHED",
+          text: "Game has finnished, wanna play again?",
+          icon: "info",
+          buttons: true,
+          dangerMode: true
+        }).then(finish => {
+          if (finish) {
+            localStorage.clear("");
+            this.$router.push("/");
+          } else {
+            localStorage.clear("");
+            this.$router.push("/");
+          }
+        });
+      }
+    },
+    checkFinish(baru, old) {
+      if (this.$store.state.room && this.$store.state.room.finish) {
+        console.log("ngecek");
         swal({
           title: "FINISHED",
           text: "Game has finnished, wanna play again?",
