@@ -30,13 +30,33 @@
       <button @click="randomize()">Start</button>
       Score: {{score}}
       <div class="gameboard">
-        <div v-for="(func, index) in arrPos" :key="index">
-          <template>
-            <div @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></div>
-          </template>
-        </div>
+<!--         <div v-for="(func, index) in arrPos" :key="index">
+          <div @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></div>
+          <div class="cards">
+            <vue-flip :active-click="activeOnClick" class="simple-test" width="10%" height="185px">
+              <template slot="front">
+                <div class= "backcard" style="height:180px; width:120px;"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></div>
+              </template>
+              <template slot="back">
+                <div class= "backcard" style="height:180px; width:120px; color:black;border-style: solid" @click="handleClick">+2 points</div>
+              </template>
+            </vue-flip>
+          </div>
+        </div> -->
       </div>
     </b-col>
+    <div class="cards">
+      <div v-for="(func, index) in arrPos" :key="index">
+        <vue-flip :active-click="activeOnClick[index]" class="simple-test" width="120px" height="185px">
+          <template slot="front">
+            <div @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></div>
+          </template>
+          <template slot="back">
+            <div class= "backcard" style="height:180px; width:120px; color:black;border-style: solid" @click="handleClick(index)">{{func == plus2 ? '+2 Point' : func == plus1 ? '+1 Point': func == plus0 ? '+0 Point' : '<3 Swal'}}</div>
+          </template>
+        </vue-flip>
+      </div>
+    </div>
 </b-container>
     <!-- <button @click="randomize()">Start</button>
     Score: {{score}}
@@ -45,6 +65,7 @@
         <button @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></button>
       </div>
     </div> -->
+
 
   </div>
 </template>
@@ -60,10 +81,10 @@ export default {
       isAdmin : false,
       showButton : true,
       score: 0,
-      arrNew: [this.plus2, this.plus2, this.plus2, this.plus1, this.plus1, this.plus1, this.plus1, this.plus0,this.plus0,this.plus0, this.swalError, this.swalError, this.swalSuccess, this.swalSuccess, this.swalConfirm, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalSuccess],
+      arrNew: [this.plus2, this.plus2, this.plus2, this.plus1,this.plus1,this.plus1, this.plus1, this.plus0,this.plus0,this.plus0, this.swalError, this.swalError, this.swalError, this.swalError, this.swalSuccess, this.swalSuccess, this.swalConfirm, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalSuccess, this.swalError, this.swalError, this.swalLoading, this.swalLoading, this.swalLoading],
       arrPos: [],
-      isDisabled: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      activeOnClick: true
+      isDisabled: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1, 1, 1],
+      activeOnClick: [true, true, true, true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,]
     }
   },
   components: {
@@ -83,35 +104,36 @@ export default {
       this.$store.dispatch('updatedFinish', payload)
     },
     randomize(){
-      while(this.arrPos.length < 20){
+      while(this.arrPos.length < 30){
         let index = Math.floor(Math.random() * this.arrNew.length)
         this.arrPos.push(this.arrNew[index])
         this.arrNew.splice(index, 1)
       }
     },
-    handleClick(){
-      this.activeOnClick = false
+    handleClick(index){
+      this.arrPos[index] = this.alreadyClick
+      this.activeOnClick[index] = false
     },
     plus2(index){
       this.score += 2
-      this.arrPos[index] = this.alreadyClick
+      // this.arrPos[index] = this.alreadyClick
       this.isDisabled[index] = 0.2
     },
     plus1(index){
       this.score += 1
       this.isDisabled[index] = 0.2
-      this.arrPos[index] = this.alreadyClick
+      // this.arrPos[index] = this.alreadyClick
     },
     plus0(index){
       this.score += 1
       this.score --
-      this.arrPos[index] = this.alreadyClick
+      // this.arrPos[index] = this.alreadyClick
       this.isDisabled[index] = 0.2
     },
     swalError(index){
       this.score += 1
       this.score --
-      this.arrPos[index] = this.alreadyClick
+      // this.arrPos[index] = this.alreadyClick
       this.isDisabled[index] = 0.2
       Swal.fire({
         icon: 'error',
@@ -122,7 +144,7 @@ export default {
     swalSuccess(index){
       this.score += 1
       this.score --
-      this.arrPos[index] = this.alreadyClick
+      // this.arrPos[index] = this.alreadyClick
       this.isDisabled[index] = 0.2
       Swal.fire(
         'Good job!',
@@ -133,7 +155,7 @@ export default {
     swalConfirm(index){
       this.score += 1
       this.score --
-      this.arrPos[index] = this.alreadyClick
+      // this.arrPos[index] = this.alreadyClick
       this.isDisabled[index] = 0.2
       Swal.fire(
         'Why You Click Me?',
@@ -144,13 +166,13 @@ export default {
     swalLoading(index){
       this.score += 1
       this.score --
-      this.arrPos[index] = this.alreadyClick
+      // this.arrPos[index] = this.alreadyClick
       this.isDisabled[index] = 0.2
       let timerInterval
       Swal.fire({
         title: 'Auto close alert!',
         html: 'I will close in <b></b> milliseconds.',
-        timer: 3500,
+        timer: 500,
         timerProgressBar: true,
         onBeforeOpen: () => {
           Swal.showLoading()
@@ -217,35 +239,39 @@ export default {
     justify-content: space-between;
     font-family: 'Noto Sans KR', sans-serif;
   }
-  .cardList{
+  /*.cardList{
     height: 90vh;
-  }
-    .cardback{
+  }*/
+  .cardback{
     height: 180px;
     width: 120px;
   }
-  .gameboard{
+/*  .gameboard{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items:flex-start;
     justify-content: space-around;
-    flex-wrap: wrap;
-  }
-    .front {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #673AB7;
-      color: white;
-    }
+  }*/
 
-    .back {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #FFC107;
-      color: white
-    }
+  .cards {
+    display: flex;
+    align-items:flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  .front {
+    background-color: #673AB7;
+    color: white;
+  }
+
+  .back {
+    background-color: #FFC107;
+    color: white
+  }
+
+
   .simple-test {
      padding: 10px;
   }
