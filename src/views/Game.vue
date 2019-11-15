@@ -1,25 +1,25 @@
 <template>
-  <div>
+  <div class="backs">
     <b-container fluid>
-    <b-col class="pemain" style="border:1px solid black;">
-      <div>
-      <img src="https://cdn2.iconfinder.com/data/icons/thesquid-ink-40-free-flat-icon-pack/64/cup-512.png" style="width:30px; height:30px">
-      Score Anda : 10 point
-      </div>
-      <b-row style="border:1px solid black">
-        <b-col >
-          <img src="https://cdn0.iconfinder.com/data/icons/avatars-6/500/Avatar_boy_man_people_account_player-512.png" style="width:30px; height:30px"> {{room.player1.name}}: {{room.player1.score}} point
+    <b-col class="contain">
+      <b-row class="pemain">
+        <b-col style="font-size:23px;" >
+          <img src="https://cdn0.iconfinder.com/data/icons/avatars-6/500/Avatar_boy_man_people_account_player-512.png" style="width:40px; height:40px"> {{room.player1.name}}: {{room.player1.score}} point
         </b-col>
-        <b-col >
-          <img src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/4-512.png" style="width:30px; height:30px"> {{room.player2.name}}: {{room.player2.score}} point
+        <b-col style="font-size:23px;" >
+          <img src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/4-512.png" style="width:40px; height:40px"> {{room.player2.name}}: {{room.player2.score}} point
         </b-col>
-        <b-col >
-          <img src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/male_avatar20-512.png" style="width:30px; height:30px"> {{room.player3.name}}: {{room.player3.score}} point
+        <b-col style="border solid 1px black; font-size:25px; color:gold;" >
+          <img src="https://cdn2.iconfinder.com/data/icons/thesquid-ink-40-free-flat-icon-pack/64/cup-512.png" style="width:40px; height:40px">Your Score: {{room.player1.score}} point
         </b-col>
-        <b-col >
-          <img src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/male_avatar17-512.png" style="width:30px; height:30px"> {{room.player4.name}}: {{room.player4.score}} point
+        <b-col style="font-size:23px;" >
+          <img src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/male_avatar20-512.png" style="width:40px; height:40px"> {{room.player3.name}}: {{room.player3.score}} point
+        </b-col>
+        <b-col style="font-size:23px;" >
+          <img src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/male_avatar17-512.png" style="width:40px; height:40px"> {{room.player4.name}}: {{room.player4.score}} point
         </b-col>
       </b-row>
+    
     </b-col>
     <b-col class="cardList">
       {{finish}} 
@@ -66,7 +66,6 @@ export default {
   ]),
   watch: {
     finish(baru, old){
-      console.log(baru, old)
       if(baru === true){
         swal({
           title: "FINISHED",
@@ -91,14 +90,33 @@ export default {
 </script>
 
 <style scoped>
-  .pemain{
+  .contain{
     height: 10vh;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:#5b9aa0;
+    font-family: 'Eczar', serif;
+  }
+    .pemain{
+    height: 100%;
+    width:100%;
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    font-family: 'Noto Sans KR', sans-serif;
+    align-items: center;
+    background-color: #5b9aa0;
+    font-family: 'Eczar', serif;
   }
   .cardList{
     height: 90vh;
   }
+  .backs{
+    background-color: #d6d4e0
+  }
+  /* .score{
+    flex-direction: row;
+    justify-content: space-between;
+  } */
 </style>
