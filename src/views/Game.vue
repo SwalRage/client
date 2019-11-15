@@ -22,25 +22,52 @@
       </b-row>
     </b-col>
     <b-col class="cardList">
-      {{finish}} 
+      {{finish}}
       <b-button @click="winner(true)"> cek pemenang</b-button>
       Selamat datang  di page game
     <b-btn v-if="isAdmin && room.count == 4 && showButton" @click="fetchCards">Start Game</b-btn>
     {{ room }}
+      <button @click="randomize()">Start</button>
+      Score: {{score}}
+      <div class="gameboard">
+        <div v-for="(func, index) in arrPos" :key="index">
+          <template>
+            <div @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></div>
+          </template>
+        </div>
+      </div>
     </b-col>
 </b-container>
+    <!-- <button @click="randomize()">Start</button>
+    Score: {{score}}
+    <div class="gameboard">
+      <div v-for="(func, index) in arrPos" :key="index">
+        <button @click="func(index)" :style="{opacity: isDisabled[index]}"><img class="cardback"alt="Cardback" src="../assets/cardback.jpeg"></button>
+      </div>
+    </div> -->
+
   </div>
 </template>
 
 <script>
 import {mapState} from 'vuex'
+import Swal from 'sweetalert2'
+import VueFlip from 'vue-flip'
 
 export default {
   data(){
     return {
       isAdmin : false,
-      showButton : true
+      showButton : true,
+      score: 0,
+      arrNew: [this.plus2, this.plus2, this.plus2, this.plus1, this.plus1, this.plus1, this.plus1, this.plus0,this.plus0,this.plus0, this.swalError, this.swalError, this.swalSuccess, this.swalSuccess, this.swalConfirm, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalLoading, this.swalSuccess],
+      arrPos: [],
+      isDisabled: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      activeOnClick: true
     }
+  },
+  components: {
+    'vue-flip': VueFlip
   },
   methods : {
     setAdmin(){
@@ -55,6 +82,98 @@ export default {
     winner(payload){
       this.$store.dispatch('updatedFinish', payload)
     },
+    randomize(){
+      while(this.arrPos.length < 20){
+        let index = Math.floor(Math.random() * this.arrNew.length)
+        this.arrPos.push(this.arrNew[index])
+        this.arrNew.splice(index, 1)
+      }
+    },
+    handleClick(){
+      this.activeOnClick = false
+    },
+    plus2(index){
+      this.score += 2
+      this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+    },
+    plus1(index){
+      this.score += 1
+      this.isDisabled[index] = 0.2
+      this.arrPos[index] = this.alreadyClick
+    },
+    plus0(index){
+      this.score += 1
+      this.score --
+      this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+    },
+    swalError(index){
+      this.score += 1
+      this.score --
+      this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You clicked the wrong card'
+      })
+    },
+    swalSuccess(index){
+      this.score += 1
+      this.score --
+      this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+      Swal.fire(
+        'Good job!',
+        'You clicked the wrong card!',
+        'success'
+      )
+    },
+    swalConfirm(index){
+      this.score += 1
+      this.score --
+      this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+      Swal.fire(
+        'Why You Click Me?',
+        'LOL',
+        'question'
+      )
+    },
+    swalLoading(index){
+      this.score += 1
+      this.score --
+      this.arrPos[index] = this.alreadyClick
+      this.isDisabled[index] = 0.2
+      let timerInterval
+      Swal.fire({
+        title: 'Auto close alert!',
+        html: 'I will close in <b></b> milliseconds.',
+        timer: 3500,
+        timerProgressBar: true,
+        onBeforeOpen: () => {
+          Swal.showLoading()
+          timerInterval = setInterval(() => {
+            Swal.getContent().querySelector('b')
+              .textContent = Swal.getTimerLeft()
+          }, 100)
+        },
+        onClose: () => {
+          clearInterval(timerInterval)
+        }
+      }).then((result) => {
+        if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.timer
+        ) {
+          console.log('I was closed by the timer') // eslint-disable-line
+        }
+      })
+    },
+    alreadyClick(index){
+      console.log('sudah di klik')
+    }
   },
   created(){
     this.$store.dispatch('getRoomDetail',this.$route.params)
@@ -100,5 +219,34 @@ export default {
   }
   .cardList{
     height: 90vh;
+  }
+    .cardback{
+    height: 180px;
+    width: 120px;
+  }
+  .gameboard{
+    display: flex;
+    flex-direction: row;
+    align-items:flex-start;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+    .front {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #673AB7;
+      color: white;
+    }
+
+    .back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #FFC107;
+      color: white
+    }
+  .simple-test {
+     padding: 10px;
   }
 </style>
