@@ -54,36 +54,6 @@
               </div>
             </template>
           </div>
-          <b-row style="border:1px solid black">
-            <b-col>
-              <img
-                src="https://cdn0.iconfinder.com/data/icons/avatars-6/500/Avatar_boy_man_people_account_player-512.png"
-                style="width:30px; height:30px"
-              />
-              {{ room.player1.name }}: {{ room.player1.score }} point
-            </b-col>
-            <b-col>
-              <img
-                src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/4-512.png"
-                style="width:30px; height:30px"
-              />
-              {{ room.player2.name }}: {{ room.player2.score }} point
-            </b-col>
-            <b-col>
-              <img
-                src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/male_avatar20-512.png"
-                style="width:30px; height:30px"
-              />
-              {{ room.player3.name }}: {{ room.player3.score }} point
-            </b-col>
-            <b-col>
-              <img
-                src="https://cdn2.iconfinder.com/data/icons/male-users-2/512/male_avatar17-512.png"
-                style="width:30px; height:30px"
-              />
-              {{ room.player4.name }}: {{ room.player4.score }} point
-            </b-col>
-          </b-row>
         </div>
       </b-col>
     </b-container>
@@ -131,10 +101,38 @@ export default {
         this.swalLoading,
         this.swalLoading,
         this.swalLoading,
-        this.swalSuccess
+        this.swalLoading,
+        this.swalLoading,
+        this.swalLoading
       ],
       arrPos: [],
-      isDisabled: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      isDisabled: [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
       activeOnClick: true
     };
   },
@@ -158,7 +156,7 @@ export default {
       this.$store.dispatch("updateStart", payload);
     },
     randomize() {
-      while (this.arrPos.length < 20) {
+      while (this.arrNew.length > 0) {
         let index = Math.floor(Math.random() * this.arrNew.length);
         this.arrPos.push(this.arrNew[index]);
         this.arrNew.splice(index, 1);
@@ -172,18 +170,42 @@ export default {
       this.arrPos[index] = this.alreadyClick;
       this.isDisabled[index] = 0.2;
       this.addScore(2);
+      Swal.fire({
+        icon: "success",
+        title: "Great!",
+        text: "You get 2 point!",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false
+      });
     },
     plus1(index) {
       this.score += 1;
       this.isDisabled[index] = 0.2;
       this.arrPos[index] = this.alreadyClick;
       this.addScore(1);
+      Swal.fire({
+        icon: "success",
+        title: "Great!",
+        text: "You get 1 point!",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false
+      });
     },
     plus0(index) {
       this.score += 1;
       this.score--;
       this.arrPos[index] = this.alreadyClick;
       this.isDisabled[index] = 0.2;
+      Swal.fire({
+        icon: "success",
+        title: "Great!",
+        text: "You get 0 point!",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false
+      });
     },
     swalError(index) {
       this.score += 1;
@@ -193,7 +215,10 @@ export default {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "You clicked the wrong card"
+        text: "You clicked the wrong card",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false
       });
     },
     swalSuccess(index) {
@@ -201,14 +226,28 @@ export default {
       this.score--;
       this.arrPos[index] = this.alreadyClick;
       this.isDisabled[index] = 0.2;
-      Swal.fire("Good job!", "You clicked the wrong card!", "success");
+      Swal.fire({
+        title: "Good job!",
+        text: "You clicked the wrong card!",
+        type: "success",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false
+      });
     },
     swalConfirm(index) {
       this.score += 1;
       this.score--;
       this.arrPos[index] = this.alreadyClick;
       this.isDisabled[index] = 0.2;
-      Swal.fire("Why You Click Me?", "LOL", "question");
+      Swal.fire({
+        text: "Why You Click Me?",
+        title: "LOL",
+        type: "question",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false
+      });
     },
     swalLoading(index) {
       this.score += 1;
@@ -219,8 +258,11 @@ export default {
       Swal.fire({
         title: "Auto close alert!",
         html: "I will close in <b></b> milliseconds.",
-        timer: 3500,
+        timer: 100,
         timerProgressBar: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
         onBeforeOpen: () => {
           Swal.showLoading();
           timerInterval = setInterval(() => {
@@ -231,13 +273,6 @@ export default {
         },
         onClose: () => {
           clearInterval(timerInterval);
-        }
-      }).then(result => {
-        if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.timer
-        ) {
-          console.log("I was closed by the timer"); // eslint-disable-line
         }
       });
     },
@@ -260,32 +295,12 @@ export default {
   watch: {
     finish(baru, old) {
       if (baru === true) {
-        swal({
+        Swal.fire({
           title: "FINISHED",
           text: "Game has finnished, wanna play again?",
-          icon: "info",
           buttons: true,
-          dangerMode: true
-        }).then(finish => {
-          if (finish) {
-            localStorage.clear("");
-            this.$router.push("/");
-          } else {
-            localStorage.clear("");
-            this.$router.push("/");
-          }
-        });
-      }
-    },
-    checkFinish(baru, old) {
-      if (this.$store.state.room && this.$store.state.room.finish) {
-        console.log("ngecek");
-        swal({
-          title: "FINISHED",
-          text: "Game has finnished, wanna play again?",
-          icon: "info",
-          buttons: true,
-          dangerMode: true
+          imageUrl:
+            "http://mrwgifs.com/wp-content/uploads/2013/06/Angry-Meme-Gif-Expresses-His-Feelings.gif"
         }).then(finish => {
           if (finish) {
             localStorage.clear("");
