@@ -43,9 +43,8 @@
       <b-col class="cardList">
         {{finish}}
         <b-button @click="winner(true)">cek pemenang</b-button>Selamat datang di page game
-        <b-btn v-if="isAdmin && room.count == 4 && showButton" @click="fetchCards">Start Game</b-btn>
-        {{ room }}
-        <button @click="randomize()">Start</button>
+        <b-btn v-if="isAdmin && room.count == 4 && showButton" @click="startGame()">Start Game</b-btn>
+        <!-- {{ room }} -->
         Score: {{score}}
         <div class="gameboard">
           <div v-for="(func, index) in arrPos" :key="index">
@@ -148,12 +147,15 @@ export default {
         this.isAdmin = true;
       }
     },
-    fetchCards() {
-      this.showButton = false;
-      console.log("ketriger show cards");
-    },
     winner(payload) {
       this.$store.dispatch("updatedFinish", payload);
+    },
+    startGame() {
+      this.randomize()
+      this.showButton = false;
+      // tambah payload room_name
+      let payload = this.$route.params.room_name
+      this.$store.dispatch("updateStart", payload);
     },
     randomize() {
       while (this.arrPos.length < 20) {
@@ -254,7 +256,7 @@ export default {
     this.$store.dispatch("getRoomDetail", this.$route.params);
     this.setAdmin();
   },
-  computed: mapState(["room", "finish"]),
+  computed: mapState(["room", "finish","start"]),
   watch: {
     finish(baru, old) {
       if (baru === true) {
@@ -293,6 +295,13 @@ export default {
             this.$router.push("/");
           }
         });
+      }
+    },
+    start(baru,old){
+      console.log(baru,'ini baru')
+      console.log(old,'ini old')
+      if (baru === true){
+        this.randomize()
       }
     }
   }
