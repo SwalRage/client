@@ -122,6 +122,7 @@ export default new Vuex.Store({
           },
           count : payload.count
         }
+        localStorage.setItem('player',`player${payload.count}`)
         db.collection('rooms').doc(`${payload.roomName}`).update(updateVal)
           .then(()=>{
             resolve()
